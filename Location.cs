@@ -11,6 +11,7 @@ namespace ProjectAlpha2
 
         private Vector2 hitboxBounds = new Point2(50, 60);
         // Location hitbox will be always above the location and centered horisontaly
+        public Storage Inventory { get; private set; } = new Storage(true);
 
         public bool Hovered { get; set; } = false;
 

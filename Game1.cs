@@ -26,7 +26,7 @@ namespace ProjectAlpha2
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            SetFrameLimit(0);
+            SetFrameLimit(144);
             SetResolution(1200, 800);
         }
 

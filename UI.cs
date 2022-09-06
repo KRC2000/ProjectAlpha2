@@ -29,6 +29,15 @@ namespace ProjectAlpha2
             DrawSelectedTravellersOverlay();
         }
 
+        private static void DrawVisitedLocationOverview()
+        {
+            ImGui.Begin("Location");
+
+            
+
+            ImGui.End();
+        }
+
         private static unsafe void DrawSelectedTravellersOverlay()
         {
             if (World.GetSelectedTravellers().Count > 0)

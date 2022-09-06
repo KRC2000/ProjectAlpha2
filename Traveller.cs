@@ -17,7 +17,7 @@ namespace ProjectAlpha2
         public bool PossessedByPlayer { get; set; } = false;
         public bool Selected { get; set; } = false;
         public Location CurrentLocation { get; private set; } = null;
-        public Storage Inventory { get; private set; } = new Storage();
+        public Storage Inventory { get; private set; } = new Storage(true);
         public bool Hovered { get; set; } = false;
 
         private Vector2 travelTargetPos;

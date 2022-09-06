@@ -34,18 +34,6 @@ namespace ProjectAlpha2
 
             t1.SetAvatar(TextureId.AvatarCat);
             t2.SetAvatar(TextureId.AvatarElephant);
-
-            t1.Inventory.AddItem(new Item(ItemId.JarOfPickles));
-            t1.Inventory.AddItem(new Item(ItemId.JarOfPickles));
-            t1.Inventory.AddItem(new Item(ItemId.Brick));
-            t1.Inventory.AddItem(new Item(ItemId.Stick));
-            t1.Inventory.AddItem(new Item(ItemId.JarOfPickles));
-            t1.Inventory.AddItem(new Item(ItemId.JarOfPickles));
-            t1.Inventory.AddItem(new Item(ItemId.JarOfPickles));
-
-            t2.Inventory.AddItem(new Item(ItemId.Stick));
-            t2.Inventory.AddItem(new Item(ItemId.Stick));
-            t2.Inventory.AddItem(new Item(ItemId.Stick));
             
             t1.TravelTo(new Vector2(500, 500));
             Travellers.Add(t1);

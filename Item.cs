@@ -35,6 +35,7 @@ namespace ProjectAlpha2
 
     public enum ItemId
     {
-        Unknown, Brick, Stick, JarOfPickles
+        Unknown, Brick, Stick, JarOfPickles, 
+        Amount
     }
 }

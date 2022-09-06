@@ -7,6 +7,7 @@ namespace ProjectAlpha2
         LocationImage_Vladimir,
         MarkerCircle,
         MarkerFrame,
-        Terrain
+        Terrain,
+        Amount
     }
 }
