@@ -16,7 +16,7 @@ namespace ProjectAlpha2
             }
 
             if (InputManager.GetMouseState().DeltaScrollWheelValue > 0) camera.ZoomOut(0.05f);
-            if  (InputManager.GetMouseState().DeltaScrollWheelValue < 0) camera.ZoomIn(0.05f);
+            if (InputManager.GetMouseState().DeltaScrollWheelValue < 0) camera.ZoomIn(0.05f);
         }
     }
 }
