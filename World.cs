@@ -25,9 +25,9 @@ namespace ProjectAlpha2
 
         public static void Generate()
         {
-            Locations.Add(new Location(){WorldPosition = new Vector2(30, 60)});
-            Locations.Add(new Location(){WorldPosition = new Vector2(140, 80)});
-            Locations.Add(new Location(){WorldPosition = new Vector2(150, 90)});
+            Locations.Add(new Location(){WorldPosition = new Vector2(30, 60), Name = "Vladivostok"});
+            Locations.Add(new Location(){WorldPosition = new Vector2(140, 80), Name = "Mariupol"});
+            Locations.Add(new Location(){WorldPosition = new Vector2(150, 90), Name = "Donetsk"});
 
             Traveller t1 = new Traveller(){WorldPosition = new Vector2(200, 100), PossessedByPlayer = true, Name = "Nikolai"};
             Traveller t2 = new Traveller(){WorldPosition = new Vector2(200, 400), PossessedByPlayer = true, Name = "Konstantin"};

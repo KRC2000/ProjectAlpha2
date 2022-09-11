@@ -12,24 +12,36 @@ namespace ProjectAlpha2
     public class Storage
     {
         public string Name { get; private set; } = "Storage";
-        public List<Item> Items { get; private set; } = new List<Item>();
+
+        public Dictionary<ItemId, List<Item>> ItemLists { get; private set; } =
+                                                new Dictionary<ItemId, List<Item>>();
 
         public Storage(){}
         public Storage(bool populateRandom)
         {
-            int count = Random.Shared.Next(1, 10);
+            Random rand = new Random();
+            int count = rand.Next(1,10);
+            
 
             for (int i = 0; i < count; i++)
             {
-                int id = Random.Shared.Next(0, (int)ItemId.Amount);
-                Items.Add(new Item((ItemId)id));
+                int id = rand.Next(0,(int)ItemId.Amount);
+                AddItem(new Item((ItemId)id));
             }
         }
 
         public void AddItem(Item item)
         {
-            Items.Add(item);
+            if (!ItemLists.ContainsKey(item.Id))
+                ItemLists.Add(item.Id, new List<Item>());
+                
+            ItemLists[item.Id].Add(item);
         }
 
+        public void RemoveItem(Item item)
+        {
+            if (ItemLists.ContainsKey(item.Id))
+                ItemLists[item.Id].Remove(item);
+        }
     }
 }

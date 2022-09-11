@@ -8,6 +8,7 @@ namespace ProjectAlpha2
 {
     public class Item
     {
+        public string Name { get; private set; } = null;
         public ItemId Id { get; private set; }
 
         public Item(ItemId id)
@@ -15,9 +16,22 @@ namespace ProjectAlpha2
             Id = id;
         }
 
+        public void SetCustomName(string name)
+        {
+            Name = name;
+        }
+
         public string GetName()
         {
-            switch (Id)
+            if (Name != null) return Name;
+
+            return GetNameById(Id);
+        }
+
+        public static string GetNameById(ItemId id)
+        {
+            
+            switch (id)
             {
                 case ItemId.Unknown:
                     return "Unknown item";
@@ -32,6 +46,8 @@ namespace ProjectAlpha2
             }
         }
     }
+
+   
 
     public enum ItemId
     {

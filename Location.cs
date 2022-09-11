@@ -8,7 +8,7 @@ namespace ProjectAlpha2
 {
     public class Location: Marker, Hoverable
     {
-
+        public string Name { get; set; }
         private Vector2 hitboxBounds = new Point2(50, 60);
         // Location hitbox will be always above the location and centered horisontaly
         public Storage Inventory { get; private set; } = new Storage(true);
