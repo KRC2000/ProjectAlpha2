@@ -30,6 +30,11 @@ namespace ProjectAlpha2
             DrawVisitedLocationOverview();
         }
 
+        // private static void DrawInventoryItemSet(KeyValuePair<ItemId, List<Item>> itemListKeypair)
+        // {
+            
+        // }
+
         private static unsafe void DrawVisitedLocationOverview()
         {
             List<Traveller> selectedTravellers = World.GetSelectedTravellers();
@@ -58,53 +63,75 @@ namespace ProjectAlpha2
                 {
                     if (ImGui.BeginTabItem(t.CurrentLocation.Name + $"({t.Name})"))
                     {
-                        ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.NoHostExtendX |
-                                                ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersOuterV |
-                                                ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInner |
-                                                ImGuiTableFlags.ScrollY;
 
                         ImGui.BeginChild("child1", new Vector2(), false, ImGuiWindowFlags.None);
-                        if (ImGui.BeginTable("split", 4, flags))
+
+                        foreach (KeyValuePair<ItemId, List<Item>> itemListKeypair in t.CurrentLocation.Inventory.ItemLists)
                         {
-                            ImGui.TableSetupScrollFreeze(0, 1);
-                            ImGui.TableSetupColumn("Image");
-                            ImGui.TableSetupColumn("Item name");
-                            ImGui.TableSetupColumn("Amount");
-                            ImGui.TableSetupColumn("Action");
-                            ImGui.TableHeadersRow();
-
-                            ImGuiListClipper clipper = new ImGuiListClipper();
-                            ImGuiListClipperPtr clipperPtr = new ImGuiListClipperPtr(&clipper);
-
-                            foreach (KeyValuePair<ItemId, List<Item>> itemListKeypair in t.CurrentLocation.Inventory.ItemLists)
+                            if (itemListKeypair.Value.Count > 1)
                             {
-                                foreach (var item in itemListKeypair.Value)
+                                bool treeOpened = ImGui.TreeNodeEx($"    \n\n\n##{itemListKeypair.Key}", ImGuiTreeNodeFlags.SpanAvailWidth);
+                                if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                                 {
+                                    if (ImGui.Button("Pick all"))
+                                    {
+                                        Storage.MoveItemSet(itemListKeypair.Key, t.CurrentLocation.Inventory, t.Inventory);
+                                    }
+                                    ImGui.EndPopup();
+                                }
+                                ImGui.SameLine();
+                                ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 35.0f);
+                                ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+                                ImGui.SameLine();
+                                ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
+                                
+                                if (treeOpened)
+                                {
+                                    foreach (Item item in itemListKeypair.Value)
+                                    {
+                                        ImGui.Selectable($"{item.GetName()}");
 
-                                    Dictionary<ItemId, List<Item>> sortedItemSets = new Dictionary<ItemId, List<Item>>();
+                                        if (ImGui.BeginPopupContextItem($"{item.GetHashCode()}"))
+                                        {
+                                            if (ImGui.Button("Pick"))
+                                            {
+                                                Storage.MoveItem(item, t.CurrentLocation.Inventory, t.Inventory);
+                                                break;
+                                            }
 
+                                            ImGui.EndPopup();
+                                        }
 
-
-                                    ImGui.TableNextRow();
-                                    ImGui.TableSetColumnIndex(0);
-
-
-                                    ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(60, 60));
-                                    ImGui.TableNextColumn();
-                                    ImGui.Text(item.GetName());
-                                    ImGui.TableNextColumn();
-                                    ImGui.Text("1234");
-                                    ImGui.TableNextColumn();
-
-
-                                    ImGui.Button("Pick all");
-                                    ImGui.Button("Pick..");
-
-
+                                    }
+                                    ImGui.TreePop();
                                 }
                             }
+                            else
+                            {
+                                ImGui.Selectable($"\n\n\n##{itemListKeypair.Key}");
+                                ImGui.SameLine();
+                                ImGui.BeginGroup();
+                                ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 14.0f);
+                                ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+                                ImGui.SameLine();
+                                ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
+                                ImGui.SetCursorPosX(ImGui.GetWindowWidth());
+                                ImGui.EndGroup();
 
-                            ImGui.EndTable();
+
+                                if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
+                                {
+                                    if (ImGui.Button("Pick"))
+                                    {
+                                        Storage.MoveItemSet(itemListKeypair.Key, t.CurrentLocation.Inventory, t.Inventory);
+                                    }
+
+                                    ImGui.EndPopup();
+                                }
+
+                            }
+
+                            ImGui.Separator();
                         }
 
                         ImGui.EndChild();
@@ -201,11 +228,6 @@ namespace ProjectAlpha2
                     ImGui.BeginTabBar("personal", ImGuiTabBarFlags.None);
                     if (ImGui.BeginTabItem("Inventory"))
                     {
-                        ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.NoHostExtendX |
-                                                ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersOuterV |
-                                                ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInner |
-                                                ImGuiTableFlags.ScrollY;
-
                         ImGui.BeginChild("child1", new Vector2(), false, ImGuiWindowFlags.None);
 
                         foreach (KeyValuePair<ItemId, List<Item>> itemListKeypair in traveller.Inventory.ItemLists)
@@ -217,6 +239,7 @@ namespace ProjectAlpha2
                                 if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                                 {
                                     ImGui.Button("Trash all");
+                                    if (traveller.CurrentLocation != null) ImGui.Button("Drop all");
                                     ImGui.EndPopup();
                                 }
                                 ImGui.SameLine();

@@ -41,7 +41,37 @@ namespace ProjectAlpha2
         public void RemoveItem(Item item)
         {
             if (ItemLists.ContainsKey(item.Id))
+            {
                 ItemLists[item.Id].Remove(item);
+                if (ItemLists[item.Id].Count <= 0)
+                    ItemLists.Remove(item.Id);
+            }
+
+        }
+
+        public static void MoveItem(Item item, Storage moveFrom, Storage moveTo)
+        {
+            moveTo.AddItem(item);
+            moveFrom.RemoveItem(item);
+        }
+
+        public static void MoveItemSet(ItemId id, Storage moveFrom, Storage moveTo)
+        {
+            for (int i = moveFrom.ItemLists[id].Count - 1; i >= 0; i--)
+            {
+                MoveItem(moveFrom.ItemLists[id][i], moveFrom, moveTo);
+            }
+        }
+
+        public static void MoveAllItems(Storage From, Storage To)
+        {
+            foreach (var itemSet in From.ItemLists)
+            {
+                foreach (var item in itemSet.Value)
+                {
+                    MoveItem(item, From, To);
+                }
+            }
         }
     }
 }
