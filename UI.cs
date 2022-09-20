@@ -223,7 +223,6 @@ namespace ProjectAlpha2
             {
                 if (ImGui.BeginTabItem(traveller.Name))
                 {
-
                     ImGui.EndTabItem();
                     ImGui.BeginTabBar("personal", ImGuiTabBarFlags.None);
                     if (ImGui.BeginTabItem("Inventory"))
@@ -232,14 +231,16 @@ namespace ProjectAlpha2
 
                         foreach (KeyValuePair<ItemId, List<Item>> itemListKeypair in traveller.Inventory.ItemLists)
                         {
-
                             if (itemListKeypair.Value.Count > 1)
                             {
                                 bool treeOpened = ImGui.TreeNodeEx($"    \n\n\n##{itemListKeypair.Key}", ImGuiTreeNodeFlags.SpanAvailWidth);
                                 if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                                 {
-                                    ImGui.Button("Trash all");
-                                    if (traveller.CurrentLocation != null) ImGui.Button("Drop all");
+                                    if (ImGui.Button("Trash all")) traveller.Inventory.RemoveItemSet(itemListKeypair.Key);
+                                    if (traveller.CurrentLocation != null) 
+                                    {
+                                        if (ImGui.Button("Drop all")) Storage.MoveItemSet(itemListKeypair.Key, traveller.Inventory, traveller.CurrentLocation.Inventory);
+                                    }
                                     ImGui.EndPopup();
                                 }
                                 ImGui.SameLine();
@@ -254,20 +255,26 @@ namespace ProjectAlpha2
                                     {
                                         ImGui.Selectable($"{item.GetName()}");
 
-
                                         if (ImGui.BeginPopupContextItem($"{item.GetHashCode()}"))
                                         {
-                                            
-                                            ImGui.Button("Trash");
+                                            if (ImGui.Button("Trash"))
+                                            {
+                                                traveller.Inventory.RemoveItem(item);
+                                                break;
+                                            }
                                             if (traveller.CurrentLocation != null)
                                             {
-                                                ImGui.Button("drop");
+                                                if (ImGui.Button("Drop"))
+                                                {
+                                                    Storage.MoveItem(item, traveller.Inventory, traveller.CurrentLocation.Inventory);
+                                                    break;
+                                                }
                                             }
 
                                             ImGui.EndPopup();
                                         }
-
                                     }
+
                                     ImGui.TreePop();
                                 }
                             }
@@ -286,21 +293,18 @@ namespace ProjectAlpha2
 
                                 if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                                 {
-                                    ImGui.Button("Trash");
+                                    if (ImGui.Button("Trash")) traveller.Inventory.RemoveItemSet(itemListKeypair.Key);    
                                     if (traveller.CurrentLocation != null)
                                     {
-                                        ImGui.Button("drop");
+                                        if (ImGui.Button("Drop")) Storage.MoveItemSet(itemListKeypair.Key, traveller.Inventory, traveller.CurrentLocation.Inventory);
                                     }
 
                                     ImGui.EndPopup();
                                 }
-
                             }
 
                             ImGui.Separator();
-
                         }
-
 
                         ImGui.EndChild();
 

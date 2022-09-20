@@ -46,7 +46,14 @@ namespace ProjectAlpha2
                 if (ItemLists[item.Id].Count <= 0)
                     ItemLists.Remove(item.Id);
             }
+        }
 
+        public void RemoveItemSet(ItemId id)
+        {
+            if (ItemLists.ContainsKey(id))
+            {
+                ItemLists.Remove(id);
+            }
         }
 
         public static void MoveItem(Item item, Storage moveFrom, Storage moveTo)
