@@ -1,3 +1,5 @@
+using System;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,8 +16,6 @@ namespace ProjectAlpha2
         public TextureId AvatarTextureId { get; private set; }
         public bool IsTraveling { get; private set; } = false;
         public float TravelSpeed { get; private set; } = 30;
-        public bool PossessedByPlayer { get; set; } = false;
-        public bool Selected { get; set; } = false;
         public Location CurrentLocation { get; private set; } = null;
         public Storage Inventory { get; private set; } = new Storage(true);
         public bool Hovered { get; set; } = false;
@@ -26,6 +26,8 @@ namespace ProjectAlpha2
         private Vector2 travelTargetVector;
         private Vector2 travelTargetUnitVector;
         private Vector2 hitboxBounds = new Point2(50, 60);
+        private float timeIncrementDistCounter, incrementTriggerDist = 10;
+        private TimeSpan timeIncrement = new TimeSpan(0, 1, 0);
 
         public void SetAvatar(TextureId id)
         {
@@ -62,24 +64,31 @@ namespace ProjectAlpha2
             travelTargetLocation = null;
         }
 
-        public void Update(GameTime delta, bool isWorldPaused)
+        public void Update(GameTime delta)
         {
-            if (!isWorldPaused)
+            if (IsTraveling)
             {
-                if (IsTraveling)
+                if (travelTargetDistanceLeft > 0)
                 {
-                    if (travelTargetDistanceLeft > 0)
+                    float travelTickSpeed = TravelSpeed * delta.GetElapsedSeconds();
+                    Vector2 step = travelTargetUnitVector * travelTickSpeed;
+                    WorldPosition += step;
+                    timeIncrementDistCounter += travelTickSpeed;
+
+                    if (this == World.PosessedTraveller &&
+                        timeIncrementDistCounter >= incrementTriggerDist)
                     {
-                        Vector2 step = travelTargetUnitVector * TravelSpeed * delta.GetElapsedSeconds();
-                        WorldPosition += step;
-                        travelTargetDistanceLeft -= step.Length();
+                        World.AddTime(timeIncrement);
+                        timeIncrementDistCounter = 0;
                     }
-                    else
-                    { // Arrive to the target
-                        WorldPosition = travelTargetPos;
-                        CurrentLocation = travelTargetLocation;
-                        IsTraveling = false;
-                    }
+
+                    travelTargetDistanceLeft -= step.Length();
+                }
+                else
+                { // Arrive to the target
+                    WorldPosition = travelTargetPos;
+                    CurrentLocation = travelTargetLocation;
+                    IsTraveling = false;
                 }
             }
         }
@@ -90,7 +99,7 @@ namespace ProjectAlpha2
             Vector2 screenTravelTarget = Vector2.Transform(travelTargetPos, Game1.MainCamera.GetViewMatrix());
 
             batch.Draw((MainImage != null) ? MainImage : ResourceManager.GetTextureBinding(TextureId.Unknown).Item2, new Rectangle((int)ScreenPosition.X - (int)hitboxBounds.X/2, (int)ScreenPosition.Y - (int)hitboxBounds.Y, (int)hitboxBounds.X, (int)hitboxBounds.X),  Color.White);
-            batch.Draw(Overlay, new Rectangle((int)ScreenPosition.X - 30/2, (int)ScreenPosition.Y - 20/2, 30, 20), (Selected) ? Color.Red : Color.White);
+            batch.Draw(Overlay, new Rectangle((int)ScreenPosition.X - 30/2, (int)ScreenPosition.Y - 20/2, 30, 20), Color.White);
 
             if (IsTraveling) batch.DrawLine(ScreenPosition, screenTravelTarget, Color.Black);
 

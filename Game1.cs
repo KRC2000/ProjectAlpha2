@@ -1,10 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using ImGuiNET;
+
 using MonoGame.Extended;
 
+using ImGuiNET;
+
+using Framework;
 
 namespace ProjectAlpha2
 {
@@ -55,8 +59,10 @@ namespace ProjectAlpha2
             ResourceManager.AddTextureBinding(Content, TextureId.MarkerFrame, "location_frame");
             ResourceManager.AddTextureBinding(Content, TextureId.Terrain, "terrain");
 
+            ResourceManager.AddTextureBinding(Content, TextureId.Forest, "forest");
+
             World.Generate();
-            World.LoadCotent();
+            World.LoadCotent(GraphicsDevice);
 
             UI.LoadContent();
         }
@@ -82,7 +88,7 @@ namespace ProjectAlpha2
             _graphics.GraphicsDevice.Clear(Color.Coral);
 
             
-            World.Draw(spriteBatch);
+            World.Draw(spriteBatch, GraphicsDevice);
 
 
             imGuiRenderer.BeforeLayout(gameTime);

@@ -8,6 +8,7 @@ namespace ProjectAlpha2
         MarkerCircle,
         MarkerFrame,
         Terrain,
+        Forest,
         Amount
     }
 }

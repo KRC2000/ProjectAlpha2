@@ -9,14 +9,18 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 
+using Framework;
 
 namespace ProjectAlpha2
 {
     public static class World
     {
-        public static bool IsPaused { get; set; } = false;
 
+        public static DateTime Time { get; private set; } = new DateTime(2000, 1, 1, 12, 0, 0);
 
+        public static Traveller PosessedTraveller;
+
+        public static List<Patch> Patches;
 
         public static List<Location> Locations { get; private set; } = new List<Location>();
         public static List<Traveller> Travellers { get; private set; } = new List<Traveller>();
@@ -29,21 +33,19 @@ namespace ProjectAlpha2
             Locations.Add(new Location(){WorldPosition = new Vector2(140, 80), Name = "Mariupol"});
             Locations.Add(new Location(){WorldPosition = new Vector2(150, 90), Name = "Donetsk"});
 
-            Traveller t1 = new Traveller(){WorldPosition = new Vector2(200, 100), PossessedByPlayer = true, Name = "Nikolai"};
-            Traveller t2 = new Traveller(){WorldPosition = new Vector2(200, 400), PossessedByPlayer = true, Name = "Konstantin"};
+            Traveller t1 = new Traveller(){WorldPosition = new Vector2(200, 100), Name = "Nikolai"};
+            PosessedTraveller = t1;
 
             t1.SetAvatar(TextureId.AvatarCat);
-            t2.SetAvatar(TextureId.AvatarElephant);
             
             t1.TravelTo(new Vector2(500, 500));
             Travellers.Add(t1);
-            Travellers.Add(t2);
 
             Hoverables.AddRange(Locations);
             Hoverables.AddRange(Travellers);
         }
 
-        public static void LoadCotent()
+        public static void LoadCotent(GraphicsDevice device)
         {
             foreach (var location in Locations)
             {
@@ -54,7 +56,17 @@ namespace ProjectAlpha2
             {
                 traveller.LoadResources();
             }
-            
+
+            Framework.Level Level = new Framework.Level("Content/World.tmx");
+
+            Patches = new List<Patch>();
+            foreach (var obj in Level.Map.ObjectGroups[0].Objects)
+            {
+                Patch p = new Patch(new Vector2(obj.X, obj.Y), obj.Polygon.Points, device);
+                p.SetTexture(ResourceManager.GetTextureBinding(TextureId.Forest).Item2);
+                Patches.Add(p);
+            }
+
         }
 
         
@@ -65,50 +77,63 @@ namespace ProjectAlpha2
 
             foreach (var traveller in Travellers)
             {
-                traveller.Update(delta, IsPaused);
+                traveller.Update(delta);
             }
         }
 
         // Get all players that are controlled by player and can receive orders
-        public static List<Traveller> GetPlayerPossessedTravellers()
+        // public static List<Traveller> GetPlayerPossessedTravellers()
+        // {
+        //     List<Traveller> possessedTravelers = new List<Traveller>();
+        //     foreach (var traveller in Travellers)
+        //     {
+        //         if (traveller.PossessedByPlayer) possessedTravelers.Add(traveller);
+        //     }
+
+        //     return possessedTravelers;
+        // }
+
+        // public static List<Traveller> GetSelectedTravellers()
+        // {
+        //     List<Traveller> selectedTravelers = new List<Traveller>();
+        //     foreach (var traveller in Travellers)
+        //     {
+        //         if (traveller.Selected) selectedTravelers.Add(traveller);
+        //     }
+
+        //     return selectedTravelers;
+        // }
+
+        // public static void UnselectAll()
+        // {
+        //     foreach (var traveller in Travellers)
+        //     {
+        //         traveller.Selected = false;
+        //     }
+        // }
+
+        public static void Draw(SpriteBatch batch, GraphicsDevice device)
         {
-            List<Traveller> possessedTravelers = new List<Traveller>();
-            foreach (var traveller in Travellers)
-            {
-                if (traveller.PossessedByPlayer) possessedTravelers.Add(traveller);
-            }
+            
 
-            return possessedTravelers;
-        }
 
-        public static List<Traveller> GetSelectedTravellers()
-        {
-            List<Traveller> selectedTravelers = new List<Traveller>();
-            foreach (var traveller in Travellers)
-            {
-                if (traveller.Selected) selectedTravelers.Add(traveller);
-            }
-
-            return selectedTravelers;
-        }
-
-        public static void UnselectAll()
-        {
-            foreach (var traveller in Travellers)
-            {
-                traveller.Selected = false;
-            }
-        }
-
-        public static void Draw(SpriteBatch batch)
-        {
             batch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp, null, null, null, Game1.MainCamera.GetViewMatrix());
-            batch.Draw(ResourceManager.GetTextureBinding(TextureId.Terrain).Item2, new Vector2(), Color.White);
+            //batch.Draw(ResourceManager.GetTextureBinding(TextureId.Terrain).Item2, new Vector2(), Color.White);
             batch.End();
 
-            batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            //Game1.MainCamera.
+            foreach (var patch in Patches)
+            {
+                
+                Vector3 camPosition = new Vector3(Game1.MainCamera.Center.X, -Game1.MainCamera.Center.Y, 1);
+                Vector3 camTarget = new Vector3(camPosition.X, camPosition.Y, camPosition.Z - 1);
+                Matrix projectionMatrix = Matrix.CreateOrthographic(device.Viewport.Width / Game1.MainCamera.Zoom, device.Viewport.Height / Game1.MainCamera.Zoom, 0, 1000f);
+                Matrix viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up);
+                Matrix worldMatrix = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+                patch.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
+            }
 
+            batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            
             foreach (var location in Locations)
             {
                 location.Draw(batch);
@@ -121,6 +146,22 @@ namespace ProjectAlpha2
 
             batch.End();
 
+            
+
+
+
+            // Vector3 camTarget = new Vector3(0f, 0f, 0f);
+            // Vector3 camPosition = new Vector3(0f, 0f, 1f);
+            // Matrix projectionMatrix = Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, camPosition.Z, camPosition.Z + 1f);
+            // Matrix viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, new Vector3(0f, 1f, 0f));
+            // Matrix worldMatrix = Matrix.CreateWorld(camTarget, Vector3.Forward, Vector3.Up);
+            // Patches[2].Draw(device, projectionMatrix, viewMatrix, worldMatrix);
+
+        }
+
+        public static void AddTime(TimeSpan timespan)
+        {
+            Time = Time + timespan;
         }
 
         private static void PlayerInputProcessing()
@@ -145,13 +186,10 @@ namespace ProjectAlpha2
                     }
                     if (travelTargetLocation == null) travelTarget = mouseWorldPos;
                     else travelTarget = travelTargetLocation.WorldPosition;
-
-                    // Make all selected travellers travel to cursor on click
-                    foreach (var traveller in GetSelectedTravellers())
-                    {
-                        if (travelTargetLocation != null) traveller.TravelToLocation(travelTargetLocation);
-                        else traveller.TravelTo(travelTarget);
-                    }
+                    
+                    if (travelTargetLocation != null) PosessedTraveller.TravelToLocation(travelTargetLocation);
+                    else PosessedTraveller.TravelTo(travelTarget);
+                    
                 }
 
                 foreach (var hoverable in Hoverables)
@@ -161,24 +199,6 @@ namespace ProjectAlpha2
                 }
 
 
-                if (InputManager.GetMouseState().WasButtonJustUp(MouseButton.Left))
-                {
-                    foreach (var traveller in Travellers)
-                    {
-                        if (traveller.DetectHit(mouseScreenPos))
-                        {
-                            if (InputManager.GetKeyboardState().IsKeyDown(Keys.LeftControl))
-                            {
-                                traveller.Selected = true;
-                            }
-                            else
-                            {
-                                UnselectAll();
-                                traveller.Selected = true;
-                            }
-                        }
-                    }
-                }
             }
         }
     }
