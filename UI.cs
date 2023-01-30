@@ -50,14 +50,13 @@ namespace ProjectAlpha2
         private static unsafe void DrawVisitedLocationOverview()
         {
             Traveller t = World.PosessedTraveller;
-            if (World.PosessedTraveller.CurrentLocation != null)
+            if (t.CurrentLocation != null)
             {
                 ImGui.Begin("Location");
                 ImGui.BeginTabBar("loc_select", ImGuiTabBarFlags.None);
 
                 if (ImGui.BeginTabItem(t.CurrentLocation.Name + $"({t.Name})"))
                 {
-
                     ImGui.BeginChild("child1", new Vector2(), false, ImGuiWindowFlags.None);
 
                     foreach (KeyValuePair<ItemId, List<Item>> itemListKeypair in t.CurrentLocation.Inventory.ItemLists)
@@ -65,14 +64,49 @@ namespace ProjectAlpha2
                         if (itemListKeypair.Value.Count > 1)
                         {
                             bool treeOpened = ImGui.TreeNodeEx($"    \n\n\n##{itemListKeypair.Key}", ImGuiTreeNodeFlags.SpanAvailWidth);
-                            if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
+
+                            if (ImGui.BeginPopupContextItem($"{itemListKeypair.Key}"))
                             {
-                                if (ImGui.Button("Pick all"))
+                                if (ImGui.IsWindowAppearing()) count = itemListKeypair.Value.Count;
+
+                                ImGui.PushItemWidth(100);
+                                ImGui.SliderInt("##slider", ref count, 1, itemListKeypair.Value.Count);
+
+                                ImGui.InputInt("##int", ref count);
+                                ImGui.PopItemWidth();
+                                if (count > itemListKeypair.Value.Count) count = itemListKeypair.Value.Count;
+                                if (count < 1) count = 1;
+
+
+                                if (ImGui.Button("Take", new Vector2(100, 20)))
                                 {
-                                    Storage.MoveItemSet(itemListKeypair.Key, t.CurrentLocation.Inventory, t.Inventory);
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        Storage.MoveItem(itemListKeypair.Value[0], t.CurrentLocation.Inventory, t.Inventory);
+                                    }
+                                }
+                                if (ImGui.Button("Throw out", new Vector2(100, 20)))
+                                {
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        t.CurrentLocation.Inventory.RemoveItem(itemListKeypair.Value[0]);
+                                    }
                                 }
                                 ImGui.EndPopup();
                             }
+
+
+
+
+
+                            // if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
+                            // {
+                            //     if (ImGui.Button("Pick all"))
+                            //     {
+                            //         Storage.MoveItemSet(itemListKeypair.Key, t.CurrentLocation.Inventory, t.Inventory);
+                            //     }
+                            //     ImGui.EndPopup();
+                            // }
                             ImGui.SameLine();
                             ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 35.0f);
                             ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
@@ -87,12 +121,18 @@ namespace ProjectAlpha2
 
                                     if (ImGui.BeginPopupContextItem($"{item.GetHashCode()}"))
                                     {
-                                        if (ImGui.Button("Pick"))
+                                        if (ImGui.Button("Take", new Vector2(100, 20)))
                                         {
                                             Storage.MoveItem(item, t.CurrentLocation.Inventory, t.Inventory);
+                                            ImGui.EndPopup();
                                             break;
                                         }
-
+                                        if (ImGui.Button("Throw out", new Vector2(100, 20)))
+                                        {
+                                            t.CurrentLocation.Inventory.RemoveItem(item);
+                                            ImGui.EndPopup();
+                                            break;
+                                        }
                                         ImGui.EndPopup();
                                     }
 
@@ -115,9 +155,13 @@ namespace ProjectAlpha2
 
                             if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                             {
-                                if (ImGui.Button("Pick"))
+                                if (ImGui.Button("Take", new Vector2(100, 20)))
                                 {
                                     Storage.MoveItemSet(itemListKeypair.Key, t.CurrentLocation.Inventory, t.Inventory);
+                                }
+                                if (ImGui.Button("Throw out", new Vector2(100, 20)))
+                                {
+                                    t.CurrentLocation.Inventory.RemoveItem(itemListKeypair.Value[0]);
                                 }
 
                                 ImGui.EndPopup();
@@ -175,7 +219,7 @@ namespace ProjectAlpha2
 
                                 if (t.CurrentLocation != null)
                                 {
-                                    if (ImGui.Button("Drop", new Vector2(100, 20))) 
+                                    if (ImGui.Button($"Drop({t.CurrentLocation.Name})", new Vector2(100, 20))) 
                                     {
                                         for (int i = 0; i < count; i++)
                                         {
@@ -209,7 +253,7 @@ namespace ProjectAlpha2
                                     {
                                         if (t.CurrentLocation != null)
                                         {
-                                            if (ImGui.Button("Drop", new Vector2(100, 20)))
+                                            if (ImGui.Button($"Drop({t.CurrentLocation.Name})", new Vector2(100, 20)))
                                             {
                                                 Storage.MoveItem(item, t.Inventory, t.CurrentLocation.Inventory);
                                                 break;
@@ -243,11 +287,11 @@ namespace ProjectAlpha2
 
                             if (ImGui.BeginPopupContextItem($"##{itemListKeypair.Key}"))
                             {
-                                if (ImGui.Button("Throw out", new Vector2(100, 20))) t.Inventory.RemoveItemSet(itemListKeypair.Key);
                                 if (t.CurrentLocation != null)
                                 {
-                                    if (ImGui.Button("Drop", new Vector2(100, 20))) Storage.MoveItemSet(itemListKeypair.Key, t.Inventory, t.CurrentLocation.Inventory);
+                                    if (ImGui.Button($"Drop({t.CurrentLocation.Name})", new Vector2(100, 20))) Storage.MoveItemSet(itemListKeypair.Key, t.Inventory, t.CurrentLocation.Inventory);
                                 }
+                                if (ImGui.Button("Throw out", new Vector2(100, 20))) t.Inventory.RemoveItemSet(itemListKeypair.Key);
 
                                 ImGui.EndPopup();
                             }
