@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,10 +24,11 @@ namespace ProjectAlpha2
         public static Traveller PosessedTraveller;
 
         public static List<Patch> Patches;
+        public static List<Area> Areas = new List<Area>();
 
         public static List<Location> Locations { get; private set; } = new List<Location>();
         public static List<Traveller> Travellers { get; private set; } = new List<Traveller>();
-
+        public static Dictionary<string, AreaDefinition> AreaDefinitions;
         public static List<Hoverable> Hoverables { get; private set; } = new List<Hoverable>();
 
         public static void Generate()
@@ -43,6 +47,12 @@ namespace ProjectAlpha2
 
             Hoverables.AddRange(Locations);
             Hoverables.AddRange(Travellers);
+
+            using (StreamReader reader = new StreamReader(Path.Join("Content", "AreaDefinitions.json")))
+            {
+                AreaDefinitions = (Dictionary<string, AreaDefinition>)JsonSerializer.Deserialize
+                        (reader.BaseStream, typeof(Dictionary<string, AreaDefinition>));
+            }
         }
 
         public static void LoadCotent(GraphicsDevice device)
@@ -64,7 +74,13 @@ namespace ProjectAlpha2
             {
                 Patch p = new Patch(new Vector2(obj.X, obj.Y), obj.Polygon.Points, device);
                 p.SetTexture(ResourceManager.GetTextureBinding(TextureId.Forest).Item2);
+                p.SetTexture(ResourceManager.GetTextureBinding("forest").Item2);
                 Patches.Add(p);
+                
+                if (!string.IsNullOrEmpty(obj.Type) && AreaDefinitions.ContainsKey(obj.Type))
+                    Areas.Add(new Area(AreaDefinitions[obj.Type], new Vector2(obj.X, obj.Y), obj.Polygon.Points, device));
+                else
+                    Areas.Add(new Area(AreaDefinitions["unknown"], new Vector2(obj.X, obj.Y), obj.Polygon.Points, device));
             }
 
         }
@@ -121,7 +137,8 @@ namespace ProjectAlpha2
             //batch.Draw(ResourceManager.GetTextureBinding(TextureId.Terrain).Item2, new Vector2(), Color.White);
             batch.End();
 
-            foreach (var patch in Patches)
+            // foreach (var patch in Patches)
+            foreach (var area in Areas)
             {
                 
                 Vector3 camPosition = new Vector3(Game1.MainCamera.Center.X, -Game1.MainCamera.Center.Y, 1);
@@ -129,7 +146,8 @@ namespace ProjectAlpha2
                 Matrix projectionMatrix = Matrix.CreateOrthographic(device.Viewport.Width / Game1.MainCamera.Zoom, device.Viewport.Height / Game1.MainCamera.Zoom, 0, 1000f);
                 Matrix viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up);
                 Matrix worldMatrix = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-                patch.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
+                //patch.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
+                area.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
             }
 
             batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);

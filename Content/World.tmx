@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="5" tileheight="5" infinite="1" nextlayerid="3" nextobjectid="37">
+ <objectgroup id="2" name="Patches">
+  <object id="23" type="forest" x="30" y="40">
+   <polygon points="0,0 30,-30 65,-25 125,10 190,105 165,250 30,325 -5,55"/>
+  </object>
+  <object id="28" type="lake" x="282" y="140">
+   <polygon points="0,0 140,-48 194,98 76,132"/>
+  </object>
+  <object id="29" x="386" y="450">
+   <polygon points="0,0 -88,-44 -68,-96 8,-118 118,-114 178,-80 200,-20 81.3333,8.66667"/>
+  </object>
+  <object id="32" x="84" y="516">
+   <polygon points="0,0 20,-26.6667 49.3333,-45.3333 98.6667,-50.6667 173.333,-41.3333 248,-24 300,5.33333 333.333,54.6667 336,85.3333 332,117.333 318.667,142.667 277.333,157.333 220,160 141.333,138.667 56,113.333 -6.66667,61.3333"/>
+  </object>
+  <object id="34" x="525.333" y="632">
+   <polygon points="0,0 193.333,-5.33333 101.333,129.333"/>
+  </object>
+  <object id="35" x="257.333" y="524">
+   <polygon points="0,0 154.667,-132 302.667,-12 30.6667,46.6667"/>
+  </object>
+  <object id="36" x="586.667" y="672">
+   <polygon points="0,0 -148,-153.333 -126.667,-185.333 -68,-172 48,-13.3333 36,10.6667"/>
+  </object>
+ </objectgroup>
+</map>

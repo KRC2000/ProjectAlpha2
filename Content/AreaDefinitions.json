@@ -1,0 +1,19 @@
+{
+    "unknown": {
+        "Resource": "lake",
+        "TravelSpeed": 1
+    },
+    "grassfield": {
+        "Resource": "forest",
+        "TravelSpeed": 1
+    },
+    "forest": {
+        "Resource": "forest",
+        "TravelSpeed": 0.8
+    },
+    "lake": {
+        "Resource": "lake",
+        "TravelSpeed": 0.1
+    }
+
+}

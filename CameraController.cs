@@ -8,7 +8,6 @@ namespace ProjectAlpha2
 {
     public class CameraController
     {
-
         public static void PanCamera(OrthographicCamera camera)
         {
             if (InputManager.GetMouseState().IsButtonDown(MonoGame.Extended.Input.MouseButton.Middle))

@@ -58,8 +58,12 @@ namespace ProjectAlpha2
             ResourceManager.AddTextureBinding(Content, TextureId.LocationImage_Vladimir, "Vladimir");
             ResourceManager.AddTextureBinding(Content, TextureId.MarkerFrame, "location_frame");
             ResourceManager.AddTextureBinding(Content, TextureId.Terrain, "terrain");
-
             ResourceManager.AddTextureBinding(Content, TextureId.Forest, "forest");
+
+            ResourceManager.AddTextureBinding(Content, "forest");
+            ResourceManager.AddTextureBinding(Content, "lake");
+
+            ResourceManager.LoadTextures(Content);
 
             World.Generate();
             World.LoadCotent(GraphicsDevice);
