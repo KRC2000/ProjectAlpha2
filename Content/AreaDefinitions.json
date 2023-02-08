@@ -1,10 +1,10 @@
 {
     "unknown": {
-        "Resource": "lake",
+        "Resource": "unknown",
         "TravelSpeed": 1
     },
-    "grassfield": {
-        "Resource": "forest",
+    "grass": {
+        "Resource": "grass",
         "TravelSpeed": 1
     },
     "forest": {
@@ -12,7 +12,7 @@
         "TravelSpeed": 0.8
     },
     "lake": {
-        "Resource": "lake",
+        "Resource": "water",
         "TravelSpeed": 0.1
     }
 

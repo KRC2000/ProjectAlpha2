@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="5" tileheight="5" infinite="1" nextlayerid="3" nextobjectid="37">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="5" tileheight="5" infinite="1" nextlayerid="3" nextobjectid="40">
  <objectgroup id="2" name="Patches">
-  <object id="23" type="forest" x="30" y="40">
+  <object id="23" class="forest" x="30" y="40">
    <polygon points="0,0 30,-30 65,-25 125,10 190,105 165,250 30,325 -5,55"/>
   </object>
-  <object id="28" type="lake" x="282" y="140">
+  <object id="28" class="lake" x="282" y="140">
    <polygon points="0,0 140,-48 194,98 76,132"/>
   </object>
   <object id="29" x="386" y="450">
@@ -21,6 +21,12 @@
   </object>
   <object id="36" x="586.667" y="672">
    <polygon points="0,0 -148,-153.333 -126.667,-185.333 -68,-172 48,-13.3333 36,10.6667"/>
+  </object>
+  <object id="38" class="grass" x="95" y="15">
+   <polygon points="0,0 310,-15 295,80"/>
+  </object>
+  <object id="39" class="grass" x="235" y="145">
+   <polygon points="0,0 -25,-40 -5,-65 55,-60 70,-35 65,0 35,15"/>
   </object>
  </objectgroup>
 </map>
