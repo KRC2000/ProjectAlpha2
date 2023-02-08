@@ -23,7 +23,6 @@ namespace ProjectAlpha2
 
         public static Traveller PosessedTraveller;
 
-        public static List<Patch> Patches;
         public static List<Area> Areas = new List<Area>();
 
         public static List<Location> Locations { get; private set; } = new List<Location>();
@@ -40,7 +39,7 @@ namespace ProjectAlpha2
             Traveller t1 = new Traveller(){WorldPosition = new Vector2(200, 100), Name = "Nikolai"};
             PosessedTraveller = t1;
 
-            t1.SetAvatar(TextureId.AvatarCat);
+            t1.SetAvatar("cat");
             
             t1.TravelTo(new Vector2(500, 500));
             Travellers.Add(t1);
@@ -69,16 +68,11 @@ namespace ProjectAlpha2
 
             Framework.Level Level = new Framework.Level("Content/World.tmx");
 
-            Patches = new List<Patch>();
             foreach (var obj in Level.Map.ObjectGroups[0].Objects)
             {
-                Patch p = new Patch(new Vector2(obj.X, obj.Y), obj.Polygon.Points, device);
-                p.SetTexture(ResourceManager.GetTextureBinding(TextureId.Forest).Item2);
-                p.SetTexture(ResourceManager.GetTextureBinding("forest").Item2);
-                Patches.Add(p);
-                
-                if (!string.IsNullOrEmpty(obj.Type) && AreaDefinitions.ContainsKey(obj.Type))
-                    Areas.Add(new Area(AreaDefinitions[obj.Type], new Vector2(obj.X, obj.Y), obj.Polygon.Points, device));
+               
+                if (!string.IsNullOrEmpty(obj.Class) && AreaDefinitions.ContainsKey(obj.Class))
+                    Areas.Add(new Area(AreaDefinitions[obj.Class], new Vector2(obj.X, obj.Y), obj.Polygon.Points, device));
                 else
                     Areas.Add(new Area(AreaDefinitions["unknown"], new Vector2(obj.X, obj.Y), obj.Polygon.Points, device));
             }
@@ -86,7 +80,6 @@ namespace ProjectAlpha2
         }
 
         
-
         public static void Update(GameTime delta)
         {
             PlayerInputProcessing();
@@ -97,47 +90,12 @@ namespace ProjectAlpha2
             }
         }
 
-        // Get all players that are controlled by player and can receive orders
-        // public static List<Traveller> GetPlayerPossessedTravellers()
-        // {
-        //     List<Traveller> possessedTravelers = new List<Traveller>();
-        //     foreach (var traveller in Travellers)
-        //     {
-        //         if (traveller.PossessedByPlayer) possessedTravelers.Add(traveller);
-        //     }
-
-        //     return possessedTravelers;
-        // }
-
-        // public static List<Traveller> GetSelectedTravellers()
-        // {
-        //     List<Traveller> selectedTravelers = new List<Traveller>();
-        //     foreach (var traveller in Travellers)
-        //     {
-        //         if (traveller.Selected) selectedTravelers.Add(traveller);
-        //     }
-
-        //     return selectedTravelers;
-        // }
-
-        // public static void UnselectAll()
-        // {
-        //     foreach (var traveller in Travellers)
-        //     {
-        //         traveller.Selected = false;
-        //     }
-        // }
-
         public static void Draw(SpriteBatch batch, GraphicsDevice device)
         {
-            
-
-
-            batch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp, null, null, null, Game1.MainCamera.GetViewMatrix());
+            //batch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp, null, null, null, Game1.MainCamera.GetViewMatrix());
             //batch.Draw(ResourceManager.GetTextureBinding(TextureId.Terrain).Item2, new Vector2(), Color.White);
-            batch.End();
+            //batch.End();
 
-            // foreach (var patch in Patches)
             foreach (var area in Areas)
             {
                 
@@ -146,7 +104,6 @@ namespace ProjectAlpha2
                 Matrix projectionMatrix = Matrix.CreateOrthographic(device.Viewport.Width / Game1.MainCamera.Zoom, device.Viewport.Height / Game1.MainCamera.Zoom, 0, 1000f);
                 Matrix viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up);
                 Matrix worldMatrix = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-                //patch.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
                 area.Draw(device, projectionMatrix, viewMatrix, worldMatrix);
             }
 
@@ -163,18 +120,6 @@ namespace ProjectAlpha2
             }
 
             batch.End();
-
-            
-
-
-
-            // Vector3 camTarget = new Vector3(0f, 0f, 0f);
-            // Vector3 camPosition = new Vector3(0f, 0f, 1f);
-            // Matrix projectionMatrix = Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, camPosition.Z, camPosition.Z + 1f);
-            // Matrix viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, new Vector3(0f, 1f, 0f));
-            // Matrix worldMatrix = Matrix.CreateWorld(camTarget, Vector3.Forward, Vector3.Up);
-            // Patches[2].Draw(device, projectionMatrix, viewMatrix, worldMatrix);
-
         }
 
         public static void AddTime(TimeSpan timespan)

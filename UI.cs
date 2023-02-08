@@ -109,7 +109,7 @@ namespace ProjectAlpha2
 							// }
 							ImGui.SameLine();
 							ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 35.0f);
-							ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+							ImGui.Image(ResourceManager.GetTextureBinding("unknown").Item1, new Vector2(38, 38));
 							ImGui.SameLine();
 							ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
 
@@ -146,7 +146,7 @@ namespace ProjectAlpha2
 							ImGui.SameLine();
 							ImGui.BeginGroup();
 							ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 14.0f);
-							ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+							ImGui.Image(ResourceManager.GetTextureBinding("unknown").Item1, new Vector2(38, 38));
 							ImGui.SameLine();
 							ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
 							ImGui.SetCursorPosX(ImGui.GetWindowWidth());
@@ -239,7 +239,7 @@ namespace ProjectAlpha2
 								
 							ImGui.SameLine();
 							ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 35.0f);
-							ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+							ImGui.Image(ResourceManager.GetTextureBinding("unknown").Item1, new Vector2(38, 38));
 							ImGui.SameLine();
 							ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
 
@@ -278,7 +278,7 @@ namespace ProjectAlpha2
 							ImGui.SameLine();
 							ImGui.BeginGroup();
 							ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 14.0f);
-							ImGui.Image(ResourceManager.GetTextureBinding(TextureId.Unknown).Item1, new Vector2(38, 38));
+							ImGui.Image(ResourceManager.GetTextureBinding("unknown").Item1, new Vector2(38, 38));
 							ImGui.SameLine();
 							ImGui.Text($"{Item.GetNameById(itemListKeypair.Key)}\n{itemListKeypair.Value.Count}");
 							ImGui.SetCursorPosX(ImGui.GetWindowWidth());

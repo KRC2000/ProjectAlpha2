@@ -17,8 +17,8 @@ namespace ProjectAlpha2
 
         public void LoadResources()
         {
-            MainImage = ResourceManager.GetTextureBinding(TextureId.LocationImage_Vladimir).Item2;
-            Overlay = ResourceManager.GetTextureBinding(TextureId.MarkerFrame).Item2;
+            MainImage = ResourceManager.GetTextureBinding("Vladimir").Item2;
+            Overlay = ResourceManager.GetTextureBinding("location_frame").Item2;
         }
 
         public bool DetectHit(Vector2 hitLocation)

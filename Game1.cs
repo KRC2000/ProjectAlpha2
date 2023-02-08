@@ -29,7 +29,7 @@ namespace ProjectAlpha2
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
+            
             SetFrameLimit(144);
             SetResolution(1200, 800);
         }
@@ -50,18 +50,15 @@ namespace ProjectAlpha2
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ResourceManager.AddTextureBinding(Content, TextureId.Unknown, "unknown");
-            ResourceManager.AddTextureBinding(Content, TextureId.AvatarCat, "cat");
-            ResourceManager.AddTextureBinding(Content, TextureId.AvatarDuck, "duck");
-            ResourceManager.AddTextureBinding(Content, TextureId.AvatarElephant, "elephant");
-            ResourceManager.AddTextureBinding(Content, TextureId.MarkerCircle, "circle");
-            ResourceManager.AddTextureBinding(Content, TextureId.LocationImage_Vladimir, "Vladimir");
-            ResourceManager.AddTextureBinding(Content, TextureId.MarkerFrame, "location_frame");
-            ResourceManager.AddTextureBinding(Content, TextureId.Terrain, "terrain");
-            ResourceManager.AddTextureBinding(Content, TextureId.Forest, "forest");
+            ResourceManager.AddTextureBinding(Content, "unknown");
+            ResourceManager.AddTextureBinding(Content, "cat");
+            ResourceManager.AddTextureBinding(Content, "Vladimir");
+            ResourceManager.AddTextureBinding(Content, "location_frame");
+            ResourceManager.AddTextureBinding(Content, "circle");
+            ResourceManager.AddTextureBinding(Content, "grass");
 
             ResourceManager.AddTextureBinding(Content, "forest");
-            ResourceManager.AddTextureBinding(Content, "lake");
+            ResourceManager.AddTextureBinding(Content, "water");
 
             ResourceManager.LoadTextures(Content);
 

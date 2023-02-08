@@ -13,7 +13,7 @@ namespace ProjectAlpha2
     {
         public string Name { get; set; }
 
-        public TextureId AvatarTextureId { get; private set; }
+        public string TextureName { get; private set; }
         public bool IsTraveling { get; private set; } = false;
         public float TravelSpeed { get; private set; } = 30;
         public Location CurrentLocation { get; private set; } = null;
@@ -29,15 +29,15 @@ namespace ProjectAlpha2
         private float timeIncrementDistCounter, incrementTriggerDist = 10;
         private TimeSpan timeIncrement = new TimeSpan(0, 1, 0);
 
-        public void SetAvatar(TextureId id)
+        public void SetAvatar(string textureName)
         {
-            AvatarTextureId = id;
-            MainImage = ResourceManager.GetTextureBinding(id).Item2;
+            TextureName = textureName;
+            MainImage = ResourceManager.GetTextureBinding(TextureName).Item2;
         }
 
         public void LoadResources()
         {
-            Overlay = ResourceManager.GetTextureBinding(TextureId.MarkerCircle).Item2;
+            Overlay = ResourceManager.GetTextureBinding("circle").Item2;
         }
 
         public void TravelTo(Vector2 target)
@@ -98,7 +98,7 @@ namespace ProjectAlpha2
             ScreenPosition = Game1.MainCamera.WorldToScreen(WorldPosition);
             Vector2 screenTravelTarget = Vector2.Transform(travelTargetPos, Game1.MainCamera.GetViewMatrix());
 
-            batch.Draw((MainImage != null) ? MainImage : ResourceManager.GetTextureBinding(TextureId.Unknown).Item2, new Rectangle((int)ScreenPosition.X - (int)hitboxBounds.X/2, (int)ScreenPosition.Y - (int)hitboxBounds.Y, (int)hitboxBounds.X, (int)hitboxBounds.X),  Color.White);
+            batch.Draw((MainImage != null) ? MainImage : ResourceManager.GetTextureBinding("unknown").Item2, new Rectangle((int)ScreenPosition.X - (int)hitboxBounds.X/2, (int)ScreenPosition.Y - (int)hitboxBounds.Y, (int)hitboxBounds.X, (int)hitboxBounds.X),  Color.White);
             batch.Draw(Overlay, new Rectangle((int)ScreenPosition.X - 30/2, (int)ScreenPosition.Y - 20/2, 30, 20), Color.White);
 
             if (IsTraveling) batch.DrawLine(ScreenPosition, screenTravelTarget, Color.Black);
